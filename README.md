@@ -30,8 +30,11 @@ Required environment variables:
 
 Optional environment variables:
 
-* `S3_ENDPOINT`: defaults to '' and is mostly used with s3-compatible storage
+* `S3_ENDPOINT`: defaults to `''` and is mostly used with s3-compatible storage
    outside of AWS.
+* `S3_ACL`: defaults to `private` but can be any of
+  `{private, public-read, public-read-write}` or anything else listed in
+  [Canned ACLs](https://docs.aws.amazon.com/AmazonS3/latest/userguide/acl-overview.html#canned-acl).
 * `SYNC_DIRECTORY`: defaults to `/mnt` but may be set to anything.
 
 ### Docker
@@ -48,5 +51,3 @@ directory to the remote directory will occur.
 
 Please note at this time that only updates to files will be pushed up.
 Deleting a file locally will not remove it in S3.
-
-*NOTE: Files pushed to S3 are currently _private-only_.*

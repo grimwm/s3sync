@@ -2,6 +2,7 @@
 # Utility to synchronize files between a directory and s3-compatible provider.
 
 SYNC_DIRECTORY=${SYNC_DIRECTORY:-/mnt}
+S3_ACL=${S3_ACL:-private}
 
 # Setup s3 credentials.
 mkdir "${HOME}/.aws"
@@ -19,12 +20,11 @@ AWS=aws
 
 # Sync between s3 and the mounted volume.
 ${AWS} s3 sync "${S3_BUCKET}" "${SYNC_DIRECTORY}"
-${AWS} s3 sync "${SYNC_DIRECTORY}" "${S3_BUCKET}"
+${AWS} s3 sync "${SYNC_DIRECTORY}" "${S3_BUCKET}" --acl "${S3_ACL}"
 
 # Watch mounted volume for new files and sync them to s3.
 cd "${SYNC_DIRECTORY}"
 while filename=$(inotifywait -q -e close_write "${SYNC_DIRECTORY}" | sed 's/.*CLOSE.* //g;') ; do
   echo "Copying ${filename} to ${S3_BUCKET}"
-  # TODO make uploaded files public (configurable)
-  ${AWS} --quiet s3 cp "${filename}" "${S3_BUCKET}"
+  ${AWS} --quiet s3 cp "${filename}" "${S3_BUCKET}" --acl "${S3_ACL}"
 done
