@@ -48,3 +48,5 @@ directory to the remote directory will occur.
 
 Please note at this time that only updates to files will be pushed up.
 Deleting a file locally will not remove it in S3.
+
+*NOTE: Files pushed to S3 are currently _private-only_.*
