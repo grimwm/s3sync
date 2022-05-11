@@ -6,7 +6,8 @@ RUN dnf upgrade -y
 RUN dnf install -y awscli inotify-tools
 RUN dnf clean all
 
+COPY entrypoint.sh /app
 COPY sync.sh /app
-RUN chmod +x /app/sync.sh
 
+ENTRYPOINT ["/app/entrypoint.sh"]
 CMD ["/app/sync.sh"]
