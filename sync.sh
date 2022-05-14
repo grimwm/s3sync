@@ -3,13 +3,18 @@
 
 SYNC_DIRECTORY=${SYNC_DIRECTORY:-/mnt}
 S3_ACL=${S3_ACL:-private}
+S3_INCREMENTAL_ONLY=$(echo ${S3_INCREMENTAL_ONLY:-false} | tr '[:upper:]' '[:lower:]')
+SYNC_QUIET=$(echo ${SYNC_QUIET:-true} | tr '[:upper:]' '[:lower:]')
 
 # Configure aws cmd.
-AWS="aws --quiet"
+AWS=aws
+[[ "${SYNC_QUIET}" == "true" ]] && AWS="${AWS} --quiet"
 [[ "${S3_ENDPOINT}" != "" ]] && AWS="${AWS} --endpoint-url=${S3_ENDPOINT}"
 
 # Sync between s3 and the mounted volume.
-${AWS} s3 sync "${S3_BUCKET}" "${SYNC_DIRECTORY}"
+if [[ "${S3_INCREMENTAL_ONLY}" == "false" ]] ; then
+  ${AWS} s3 sync "${S3_BUCKET}" "${SYNC_DIRECTORY}"
+fi
 ${AWS} s3 sync "${SYNC_DIRECTORY}" "${S3_BUCKET}" --acl "${S3_ACL}"
 
 # Watch mounted volume for new files and sync them to s3.

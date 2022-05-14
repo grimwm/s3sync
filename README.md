@@ -35,7 +35,13 @@ Optional environment variables:
 * `S3_ACL`: defaults to `private` but can be any of
   `{private, public-read, public-read-write}` or anything else listed in
   [Canned ACLs](https://docs.aws.amazon.com/AmazonS3/latest/userguide/acl-overview.html#canned-acl).
+* `S3_INCREMENTAL_ONLY`: defaults to `false` but can also be `true`;
+   setting this to `false` causes the container to sync _down_ from the S3
+   storage to the local `SYNC_DIRECTORY` first. A value of `true` means that
+   syncs only happen from local => S3 whenever local changes are made.
 * `SYNC_DIRECTORY`: defaults to `/mnt` but may be set to anything.
+* `SYNC_QUIET`: defaults to `true`; `false` will allow the `aws` command
+   to output its general diagonostic information as it runs
 
 ### Docker
 
